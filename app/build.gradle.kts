@@ -45,4 +45,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation (libs.androidx.room.ktx)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation (libs.androidx.datastore.preferences)
+
+    implementation (libs.play.services.maps)
+
+    // ViewModel + coroutines support
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.androidx.lifecycle.runtime.ktx)
 }
