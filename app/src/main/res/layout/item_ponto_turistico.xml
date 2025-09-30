@@ -1,0 +1,75 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/ivImagem"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Imagem do ponto turístico"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Nome do ponto"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/ivImagem"
+        app:layout_constraintTop_toTopOf="@id/ivImagem"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvDescricao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Descrição breve do ponto turístico."
+        app:layout_constraintStart_toEndOf="@id/ivImagem"
+        app:layout_constraintTop_toBottomOf="@id/tvNome"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvLatitude"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Lat: -23.1234"
+        android:textSize="12sp"
+        android:textColor="#666"
+        app:layout_constraintStart_toEndOf="@id/ivImagem"
+        app:layout_constraintTop_toBottomOf="@id/tvDescricao"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        />
+
+    <TextView
+        android:id="@+id/tvLongitude"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Long: -46.5678"
+        android:textSize="12sp"
+        android:textColor="#666"
+        app:layout_constraintStart_toEndOf="@id/tvLatitude"
+        app:layout_constraintTop_toBottomOf="@id/tvDescricao"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        />
+
+    <Button
+        android:id="@+id/btEditar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Editar"
+        app:layout_constraintStart_toEndOf="@id/tvLongitude"
+        app:layout_constraintTop_toBottomOf="@id/tvDescricao"
+        android:layout_marginStart="24dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
