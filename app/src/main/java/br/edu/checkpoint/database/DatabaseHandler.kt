@@ -14,7 +14,7 @@ class DatabaseHandler( context : Context) : SQLiteOpenHelper( context, DATABASE_
                 "nome TEXT, descricao TEXT, " +
                 "latitude REAL,\n" +
                 "longitude REAL,\n" +
-                "imagem BLOB )")
+                "imagem TEXT )")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -51,8 +51,6 @@ class DatabaseHandler( context : Context) : SQLiteOpenHelper( context, DATABASE_
             "_id = ?",
             arrayOf(cadastro._id.toString())
         )
-
-        banco.close()
     }
 
     fun delete( _id : Int ) {
@@ -81,7 +79,7 @@ class DatabaseHandler( context : Context) : SQLiteOpenHelper( context, DATABASE_
                 registro.getString( 2 ),
                 registro.getDouble( 3 ),
                 registro.getDouble( 4 ),
-                registro.getBlob(5)
+                registro.getString(5)
 
             )
         }
@@ -115,7 +113,7 @@ class DatabaseHandler( context : Context) : SQLiteOpenHelper( context, DATABASE_
                     cursor.getString(2),
                     cursor.getDouble(3),
                     cursor.getDouble(4),
-                    cursor.getBlob(5)
+                    cursor.getString(5)
                 )
                 cadastros.add(cadastro)
             } while (cursor.moveToNext())
@@ -126,7 +124,7 @@ class DatabaseHandler( context : Context) : SQLiteOpenHelper( context, DATABASE_
 
     companion object {
         private const val DATABASE_NAME = "dbfile.sqlite"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
         private const val TABLE_NAME = "cadastro"
     }
 }

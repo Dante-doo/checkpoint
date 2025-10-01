@@ -1,7 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.PontosTuristicos" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/rosa_claro</item>
+
+        <item name="android:textColor">@color/white</item>
+
+        <item name="colorOnPrimary">@color/texto_escuro</item>
+        <item name="colorControlNormal">@color/texto_escuro</item>
     </style>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
 import br.edu.checkpoint.CRUDActivity
@@ -25,7 +26,7 @@ class ListaAdapter (val context: Context, val cursor : Cursor) : BaseAdapter(){
             cursor.getString(2),
             cursor.getDouble(3),
             cursor.getDouble(4),
-            cursor.getBlob(5),
+            cursor.getString(5),
         )
         return cadastro
     }
@@ -52,10 +53,9 @@ class ListaAdapter (val context: Context, val cursor : Cursor) : BaseAdapter(){
         tvLatitude.text = cursor.getString(3)
         tvLongitude.text = cursor.getString(4)
 
-        val imagemBytes = cursor.getBlob(5)
-        if (imagemBytes != null && imagemBytes.isNotEmpty()) {
-            val bitmap = BitmapFactory.decodeByteArray(imagemBytes, 0, imagemBytes.size)
-            ivImagem.setImageBitmap(bitmap)
+        val imagemUriString = cursor.getString(5) // <-- Mude de getBlob(5) para getString(5)
+        if (!imagemUriString.isNullOrEmpty()) {
+            ivImagem.setImageURI(Uri.parse(imagemUriString))
         }
 
 
@@ -68,7 +68,7 @@ class ListaAdapter (val context: Context, val cursor : Cursor) : BaseAdapter(){
             intent.putExtra("descricao", cursor.getString(2))
             intent.putExtra("latitude", cursor.getDouble(3))
             intent.putExtra("longitude", cursor.getDouble(4))
-            intent.putExtra("imagem", cursor.getBlob(5))
+            intent.putExtra("imagem", cursor.getString(5))
 
             context.startActivity(intent)
         }

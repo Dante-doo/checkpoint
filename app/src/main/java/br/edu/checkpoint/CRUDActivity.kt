@@ -1,8 +1,9 @@
 package br.edu.checkpoint
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -13,10 +14,14 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import br.edu.checkpoint.database.DatabaseHandler
 import br.edu.checkpoint.entity.Cadastro
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.util.UUID
+import androidx.core.net.toUri
 
 class CRUDActivity : AppCompatActivity() {
 
@@ -28,19 +33,18 @@ class CRUDActivity : AppCompatActivity() {
     private lateinit var btnSalvar: Button
     private lateinit var btnExcluir: Button
     private lateinit var banco : DatabaseHandler
-    private var imagemSelecionadaUri: Uri? = null
-    private var imagemBytes: ByteArray? = null
-
+    private var imagemUriString: String? = null
     private var id: Int = 0
-
-
+    private val STORAGE_PERMISSION_CODE = 101
 
     private val selecionarImagem =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                imagemSelecionadaUri = uri
-                ivImagem.setImageURI(uri)
-                imagemBytes = uriToByteArray(uri)
+                // Copia a imagem para o armazenamento interno e salva o novo URI
+                imagemUriString = saveImageToInternalStorage(uri)?.toString()
+                imagemUriString?.let {
+                    ivImagem.setImageURI(it.toUri())
+                }
             }
         }
 
@@ -76,10 +80,9 @@ class CRUDActivity : AppCompatActivity() {
             etDescricao.setText(intent.getStringExtra("descricao"))
             etLatitude.setText(intent.getDoubleExtra("latitude", 0.0).toString())
             etLongitude.setText(intent.getDoubleExtra("longitude", 0.0).toString())
-            imagemBytes = intent.getByteArrayExtra("imagem")
-            imagemBytes?.let {
-                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-                ivImagem.setImageBitmap(bitmap)
+            imagemUriString = intent.getStringExtra("imagem")
+            imagemUriString?.let {
+                ivImagem.setImageURI(Uri.parse(it))
             }
 
         } else {
@@ -103,10 +106,46 @@ class CRUDActivity : AppCompatActivity() {
         }
 
         btnSelecionarImagem.setOnClickListener {
+            checkPermissionAndOpenGallery()
+        }
+    }
+
+    private fun checkPermissionAndOpenGallery() {
+        // Define a permissão com base na versão do Android
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(permission), STORAGE_PERMISSION_CODE)
+        } else {
             selecionarImagem.launch("image/*")
         }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selecionarImagem.launch("image/*")
+            } else {
+                Toast.makeText(this, "Permissão para acessar a galeria foi negada.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun uriToByteArray(uri: Uri): ByteArray? {
+        return try {
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                inputStream.readBytes()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     private fun btnExcluirOnClick() {
         if( id != 0 ) {
@@ -126,7 +165,7 @@ class CRUDActivity : AppCompatActivity() {
                 etDescricao.text.toString(),
                 etLatitude.text.toString().toDouble(),
                 etLongitude.text.toString().toDouble(),
-                imagemBytes
+                imagemUriString // <-- Salva o URI como String
             )
             Log.d("CRUD", "ID recebido no cadastro: ${cadastro._id}")
 
@@ -143,6 +182,23 @@ class CRUDActivity : AppCompatActivity() {
         }
     }
 
+    private fun saveImageToInternalStorage(uri: Uri): Uri? {
+        return try {
+            val inputStream = contentResolver.openInputStream(uri)
+            // Cria um nome de arquivo único
+            val fileName = "${UUID.randomUUID()}.jpg"
+            val file = File(filesDir, fileName)
+            val outputStream = FileOutputStream(file)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+            Uri.fromFile(file)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()
@@ -151,18 +207,18 @@ class CRUDActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun uriToByteArray(uri: Uri): ByteArray? {
-        return try {
-            val inputStream: InputStream? = contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            val stream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            stream.toByteArray()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
+//    private fun uriToByteArray(uri: Uri): ByteArray? {
+//        return try {
+//            val inputStream: InputStream? = contentResolver.openInputStream(uri)
+//            val bitmap = BitmapFactory.decodeStream(inputStream)
+//            val stream = ByteArrayOutputStream()
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+//            stream.toByteArray()
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            null
+//        }
+//    }
 
 
     private fun initDatabase() {

@@ -2,6 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="rosa_escuro">#C2185B</color>
+    <color name="texto_claro">#FFFFFF</color>
+
+    <color name="rosa_claro">#F8BBD0</color>
+    <color name="texto_escuro">#000000</color>
+
     <color name="pink">#ff548d</color>
     <color name="colorPrimary">#ff96b9</color>
 </resources>
