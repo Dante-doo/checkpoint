@@ -1,75 +1,68 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp">
 
     <ImageView
         android:id="@+id/ivImagem"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="centerCrop"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:contentDescription="Imagem do ponto turístico"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher_background"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvNome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:text="Nome do ponto"
-        android:textStyle="bold"
         android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/btEditar"
         app:layout_constraintStart_toEndOf="@id/ivImagem"
-        app:layout_constraintTop_toTopOf="@id/ivImagem"
-        android:layout_marginStart="8dp"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="@id/ivImagem" />
 
     <TextView
         android:id="@+id/tvDescricao"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
         android:text="Descrição breve do ponto turístico."
+        app:layout_constraintBottom_toBottomOf="@id/ivImagem"
+        app:layout_constraintEnd_toStartOf="@+id/btEditar"
         app:layout_constraintStart_toEndOf="@id/ivImagem"
-        app:layout_constraintTop_toBottomOf="@id/tvNome"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/tvNome" />
 
-    <TextView
-        android:id="@+id/tvLatitude"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Lat: -23.1234"
-        android:textSize="12sp"
-        android:textColor="#666"
-        app:layout_constraintStart_toEndOf="@id/ivImagem"
-        app:layout_constraintTop_toBottomOf="@id/tvDescricao"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        />
+    <ImageButton
+        android:id="@+id/btDeletar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="1dp"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="Deletar"
+        android:src="@drawable/delete_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvLongitude"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Long: -46.5678"
-        android:textSize="12sp"
-        android:textColor="#666"
-        app:layout_constraintStart_toEndOf="@id/tvLatitude"
-        app:layout_constraintTop_toBottomOf="@id/tvDescricao"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        />
-
-    <Button
+    <ImageButton
         android:id="@+id/btEditar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Editar"
-        app:layout_constraintStart_toEndOf="@id/tvLongitude"
-        app:layout_constraintTop_toBottomOf="@id/tvDescricao"
-        android:layout_marginStart="24dp"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="1dp"
+        android:contentDescription="Editar"
+        android:src="@drawable/edit_location_alt_24"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btDeletar"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

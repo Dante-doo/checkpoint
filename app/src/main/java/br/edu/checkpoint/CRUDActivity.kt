@@ -88,6 +88,8 @@ class CRUDActivity : AppCompatActivity() {
         } else {
             btnExcluir.visibility = Button.GONE
 
+            etNome.setText(intent.getStringExtra("nome"))
+
             intent.getStringExtra("descricao")?.let { etDescricao.setText(it) }
             val latitude = intent.getDoubleExtra("latitude", 0.0)
             val longitude = intent.getDoubleExtra("longitude", 0.0)

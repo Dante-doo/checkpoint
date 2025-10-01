@@ -1,5 +1,6 @@
 package br.edu.checkpoint
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -13,6 +14,7 @@ import br.edu.checkpoint.database.DatabaseHandler
 class LocationsActivity : AppCompatActivity() {
 
     private lateinit var banco : DatabaseHandler
+    private lateinit var lvPrincipal: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,9 @@ class LocationsActivity : AppCompatActivity() {
         }
 
         banco = DatabaseHandler(this )
+
+        lvPrincipal = findViewById(R.id.lvPrincipal) // Inicialize a variável
+        banco = DatabaseHandler(this )
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
@@ -39,9 +44,24 @@ class LocationsActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        refreshListView()
+    }
+    private fun refreshListView() {
         val cursor = banco.list()
-        val adapter = ListaAdapter( this, cursor )
-        findViewById<ListView>(R.id.lvPrincipal).adapter = adapter
+        val adapter = ListaAdapter(this, cursor)
+        lvPrincipal.adapter = adapter
+    }
+
+    fun deletePontoTuristico(id: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Confirmar Exclusão")
+            .setMessage("Tem certeza de que deseja excluir este ponto turístico?")
+            .setPositiveButton("Sim") { _, _ ->
+                banco.delete(id)
+                refreshListView()
+            }
+            .setNegativeButton("Não", null)
+            .show()
     }
 
     fun btCRUDLocationsOnClick(view: View) {

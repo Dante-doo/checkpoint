@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Checkpoint</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="configura_es">Configurações</string>
+    <string name="lista_de_localiza_es">Lista de localizações</string>
 </resources>

@@ -7,9 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
@@ -31,9 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="@drawable/roundbutton"
-            android:contentDescription="Configurações"
+            android:contentDescription="@string/configura_es"
             android:src="@drawable/baseline_settings_24"
+            android:background = "@drawable/roundbutton"
+            android:backgroundTint="?attr/colorPrimary"
             android:layout_marginEnd="16dp"/>
 
     </androidx.appcompat.widget.Toolbar>
@@ -42,16 +41,15 @@
         android:id="@+id/ibLocations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Lista de localizações"
-        android:src="@drawable/baseline_location_on_24"
-        android:background = "@drawable/roundbutton"
-        android:backgroundTint="?attr/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        android:padding="18dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="@string/lista_de_localiza_es"
         android:onClick="btLocationsOnClick"
-        />
+        android:padding="18dp"
+        android:src="@drawable/menu_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

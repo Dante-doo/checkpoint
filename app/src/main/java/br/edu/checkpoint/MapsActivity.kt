@@ -141,6 +141,68 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }.start()
         }
 
+        mMap.setOnMapClickListener { latLng ->
+            val latitude = latLng.latitude
+            val longitude = latLng.longitude
+
+            marcadorTemp?.remove()
+            marcadorTemp = mMap.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+            )
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+
+            val apiKey = getApiKeyFromManifest()
+            val url = "https://maps.googleapis.com/maps/api/geocode/xml?latlng=$latitude,$longitude&key=$apiKey"
+
+            Thread {
+                try {
+                    val connection = URL(url).openConnection()
+                    val input = BufferedReader(InputStreamReader(connection.getInputStream()))
+                    val response = StringBuilder()
+
+                    var linha = input.readLine()
+                    while (linha != null) {
+                        response.append(linha)
+                        linha = input.readLine()
+                    }
+                    input.close()
+
+                    val resposta = response.toString()
+                    val endereco: String = if ("<formatted_address>" in resposta) {
+                        resposta.substringAfter("<formatted_address>").substringBefore("</formatted_address>")
+                    } else {
+                        "" // Deixa a string vazia se não encontrar
+                    }
+
+                    runOnUiThread {
+                        val dialog = AlertDialog.Builder(this)
+                            .setTitle("Endereço")
+                            .setMessage(if (endereco.isNotEmpty()) endereco else "Nenhum endereço encontrado para este local.")
+                            .setPositiveButton("Cadastrar Ponto") { _, _ ->
+                                val intent = Intent(this, CRUDActivity::class.java)
+                                intent.putExtra("descricao", endereco)
+                                intent.putExtra("latitude", latLng.latitude)
+                                intent.putExtra("longitude", latLng.longitude)
+                                startActivity(intent)
+                            }
+                            .setNegativeButton("Cancelar") {_, _ ->
+                                marcadorTemp?.remove()
+                                marcadorTemp = null
+                            }
+                            .create()
+                        dialog.show()
+                    }
+
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        Toast.makeText(this, "Erro ao buscar endereço", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }.start()
+        }
+
 
         val registros = banco.selectAll()
         for (cadastro in registros) {
@@ -206,7 +268,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
         return appInfo.metaData.getString("com.google.android.geo.API_KEY")
     }
-
-
-
 }

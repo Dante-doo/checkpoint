@@ -7,12 +7,15 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
+import android.widget.ImageButton
 import br.edu.checkpoint.CRUDActivity
+import br.edu.checkpoint.LocationsActivity
 import br.edu.checkpoint.R
 import br.edu.checkpoint.entity.Cadastro
 import com.google.android.material.button.MaterialButton
+import androidx.core.net.toUri
 
-class ListaAdapter (val context: Context, val cursor : Cursor) : BaseAdapter(){
+class ListaAdapter (private val activity: LocationsActivity, private val cursor : Cursor) : BaseAdapter(){
 
     override fun getCount(): Int {
         return cursor.count
@@ -36,41 +39,42 @@ class ListaAdapter (val context: Context, val cursor : Cursor) : BaseAdapter(){
         return cursor.getLong(0)
     }
 
-    override fun getView(id: Int, p1: android.view.View?, p2: android.view.ViewGroup?): android.view.View {
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup?): android.view.View {
+        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val v = inflater.inflate( R.layout.item_ponto_turistico, null)
 
         val tvNome = v.findViewById<android.widget.TextView>(R.id.tvNome)
         val tvDescricao = v.findViewById<android.widget.TextView>(R.id.tvDescricao)
-        val tvLatitude = v.findViewById<android.widget.TextView>(R.id.tvLatitude)
-        val tvLongitude = v.findViewById<android.widget.TextView>(R.id.tvLongitude)
         val ivImagem = v.findViewById<android.widget.ImageView>(R.id.ivImagem)
-        val btEditar = v.findViewById<MaterialButton>(R.id.btEditar)
+        val btEditar = v.findViewById<ImageButton>(R.id.btEditar)
+        val btDeletar = v.findViewById<ImageButton>(R.id.btDeletar) // Novo botão
 
-        cursor.moveToPosition( id )
+        cursor.moveToPosition(position)
+
         tvNome.text = cursor.getString(1)
         tvDescricao.text = cursor.getString(2)
-        tvLatitude.text = cursor.getString(3)
-        tvLongitude.text = cursor.getString(4)
 
-        val imagemUriString = cursor.getString(5) // <-- Mude de getBlob(5) para getString(5)
+        val imagemUriString = cursor.getString(5)
         if (!imagemUriString.isNullOrEmpty()) {
-            ivImagem.setImageURI(Uri.parse(imagemUriString))
+            ivImagem.setImageURI(imagemUriString.toUri())
         }
 
-
-        btEditar.setOnClickListener{
-            cursor.moveToPosition(id)
-
-            val intent = Intent(context, CRUDActivity::class.java)
+        btEditar.setOnClickListener {
+            cursor.moveToPosition(position)
+            val intent = Intent(activity, CRUDActivity::class.java)
             intent.putExtra("cod", cursor.getInt(0))
             intent.putExtra("nome", cursor.getString(1))
             intent.putExtra("descricao", cursor.getString(2))
             intent.putExtra("latitude", cursor.getDouble(3))
             intent.putExtra("longitude", cursor.getDouble(4))
             intent.putExtra("imagem", cursor.getString(5))
+            activity.startActivity(intent)
+        }
 
-            context.startActivity(intent)
+        btDeletar.setOnClickListener {
+            cursor.moveToPosition(position)
+            val idParaDeletar = cursor.getInt(0)
+            activity.deletePontoTuristico(idParaDeletar)
         }
 
         return v
