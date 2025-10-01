@@ -7,33 +7,46 @@
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
 
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MapsActivity" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".MapsActivity"
+        tools:layout_editor_absoluteX="34dp" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="?attr/colorPrimary"
-        app:titleTextColor="?attr/colorOnPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/press_start_2p"
+            android:includeFontPadding="false"
+            android:text="Checkpoint"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="177dp"
+            tools:layout_editor_absoluteY="15dp" />
 
         <ImageButton
             android:id="@+id/ibConfig"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:contentDescription="@string/configura_es"
-            android:src="@drawable/baseline_settings_24"
-            android:background = "@drawable/roundbutton"
-            android:backgroundTint="?attr/colorPrimary"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/roundbutton"
+            android:contentDescription="Configurações"
+            android:src="@drawable/baseline_settings_24" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -51,5 +64,15 @@
         android:src="@drawable/menu_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/map"
+        app:srcCompat="@drawable/icone_checkpoint" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

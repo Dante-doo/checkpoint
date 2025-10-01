@@ -1,5 +1,6 @@
 package br.edu.checkpoint
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -29,11 +30,10 @@ class LocationsActivity : AppCompatActivity() {
             title = "Lista de pontos turísticos"
         }
 
-        banco = DatabaseHandler(this )
-
-        lvPrincipal = findViewById(R.id.lvPrincipal) // Inicialize a variável
+        lvPrincipal = findViewById(R.id.lvPrincipal)
         banco = DatabaseHandler(this )
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()

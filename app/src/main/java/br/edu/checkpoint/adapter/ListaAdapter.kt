@@ -1,5 +1,6 @@
 package br.edu.checkpoint.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -15,7 +16,7 @@ import br.edu.checkpoint.entity.Cadastro
 import com.google.android.material.button.MaterialButton
 import androidx.core.net.toUri
 
-class ListaAdapter (private val activity: LocationsActivity, private val cursor : Cursor) : BaseAdapter(){
+class ListaAdapter (private val activity: LocationsActivity, val cursor : Cursor) : BaseAdapter(){
 
     override fun getCount(): Int {
         return cursor.count
@@ -47,7 +48,7 @@ class ListaAdapter (private val activity: LocationsActivity, private val cursor 
         val tvDescricao = v.findViewById<android.widget.TextView>(R.id.tvDescricao)
         val ivImagem = v.findViewById<android.widget.ImageView>(R.id.ivImagem)
         val btEditar = v.findViewById<ImageButton>(R.id.btEditar)
-        val btDeletar = v.findViewById<ImageButton>(R.id.btDeletar) // Novo botão
+        val btDeletar = v.findViewById<ImageButton>(R.id.btDeletar)
 
         cursor.moveToPosition(position)
 
@@ -56,9 +57,10 @@ class ListaAdapter (private val activity: LocationsActivity, private val cursor 
 
         val imagemUriString = cursor.getString(5)
         if (!imagemUriString.isNullOrEmpty()) {
-            ivImagem.setImageURI(imagemUriString.toUri())
+            ivImagem.setImageURI(android.net.Uri.parse(imagemUriString))
         }
 
+        // AÇÃO DO BOTÃO DE EDITAR (sem alterações)
         btEditar.setOnClickListener {
             cursor.moveToPosition(position)
             val intent = Intent(activity, CRUDActivity::class.java)
@@ -71,10 +73,25 @@ class ListaAdapter (private val activity: LocationsActivity, private val cursor 
             activity.startActivity(intent)
         }
 
+        // AÇÃO DO BOTÃO DE DELETAR (sem alterações)
         btDeletar.setOnClickListener {
             cursor.moveToPosition(position)
             val idParaDeletar = cursor.getInt(0)
             activity.deletePontoTuristico(idParaDeletar)
+        }
+
+        // ADICIONE ESTE NOVO LISTENER PARA O CLIQUE NO ITEM INTEIRO
+        v.setOnClickListener {
+            cursor.moveToPosition(position)
+
+            val latitude = cursor.getDouble(3)
+            val longitude = cursor.getDouble(4)
+
+            val intent = Intent()
+            intent.putExtra("latitude", latitude)
+            intent.putExtra("longitude", longitude)
+            activity.setResult(Activity.RESULT_OK, intent)
+            activity.finish() // Fecha a tela da lista e volta para o mapa
         }
 
         return v
